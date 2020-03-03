@@ -5,6 +5,7 @@
 #include "SpaceObject.h"
 #include "UFO.h"
 #include "Planet.h"
+#include "MoveObj.h"
 
 typedef std::list<Planet>::iterator iterPlanet;
 

@@ -7,6 +7,7 @@ Game::Game()
 
 Game::~Game()
 {
+	delete planet
 }
 
 void Game::StartGame(HWND hWnd)
@@ -14,12 +15,15 @@ void Game::StartGame(HWND hWnd)
 	startPos = GetStPos(hWnd);
 	planet.push_back(Planet(startPos, 50, 10));
 	planet.push_back(Planet());
-	planet.end()->SetGravity(15);
+	iterPlanet it = --planet.end();
+	it->SetGravity(15);
 	player->SetCenterOfRorarion(startPos);
-	player->SetRedius(15);
+	player->SetRedius(12);
+	it = planet.begin();
 	player->SetSpeed(10);
-	int dist = planet.begin()->GetGravity();
+	int dist = it->GetGravity();
 	player->SetDistanse(dist);
+	moveMode = rotation;
 }
 
 POINT Game::GetStPos(HWND hWnd)
@@ -68,12 +72,14 @@ void Game::Move()
 void Game::Jump()
 {
 	iterPlanet collisionObj = GetPlanetIfCollision();
-	if (collisionObj == planet.begin())
+	iterPlanet begin = planet.begin();
+	if (collisionObj == begin)
 		player->Jump();
 	else
 	{
+		iterPlanet it = --planet.end();
 		moveMode = rotation;
-		POINT newCenterRotat = SetNewCenterRotate(planet.end());
+		POINT newCenterRotat = SetNewCenterRotate(it);
 		double newAngle = player->CaltulateAngle(newCenterRotat);
 		player->SetAngle(newAngle);
 	}
@@ -91,30 +97,30 @@ void Game::DrawScene(HWND hWnd)
 	EndPaint(hWnd, &ps);
 }
 
-iterPlanet Game::GetPlanetIfCollision()
-{
-	iterPlanet it = planet.begin();
-	for (it++; it != planet.end(); ++it)
-	{
-		if (IsCollision(it))
-			return it;
-	}
-	return planet.begin();
-}
-
-bool Game::IsCollision(iterPlanet itPlanet)
-{
-	POINT posPlayer = player->GetPosition();
-	POINT posPlanet = itPlanet->GetPosition();
-	int dist = GetDistance(posPlayer, posPlanet);
-	return dist <= itPlanet->GetGravity();
-}
-
-int Game::GetDistance(POINT a, POINT b)
-{
-	double c = pow((b.x - a.x), 2) + pow((b.y - a.y), 2);
-	return int(sqrt(c)) - player->GetRadius();
-}
+//iterPlanet Game::GetPlanetIfCollision()
+//{
+//	iterPlanet it = planet.begin();
+//	for (it++; it != planet.end(); ++it)
+//	{
+//		if (IsCollision(it))
+//			return it;
+//	}
+//	return planet.begin();
+//}
+//
+//bool Game::IsCollision(iterPlanet itPlanet)
+//{
+//	POINT posPlayer = player->GetPosition();
+//	POINT posPlanet = itPlanet->GetPosition();
+//	int dist = GetDistance(posPlayer, posPlanet);
+//	return dist <= itPlanet->GetGravity();
+//}
+//
+//int Game::GetDistance(POINT a, POINT b)
+//{
+//	double c = pow((b.x - a.x), 2) + pow((b.y - a.y), 2);
+//	return int(sqrt(c)) - player->GetRadius();
+//}
 
 POINT Game::SetNewCenterRotate(iterPlanet itPlanet)
 {
