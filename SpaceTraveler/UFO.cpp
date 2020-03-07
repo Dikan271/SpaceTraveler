@@ -13,27 +13,32 @@ void UFO::SetCenterOfRorarion(int x, int y)
 	CenterOfRotation.y = y;
 }
 
-void UFO::SetDistanse(int dist)
+void UFO::SetDistanse(double dist)
 {
 	distance = radiusObject + dist;
 }
 
-void UFO::SetSpeed(int speed)
+void UFO::SetSpeed(double speed)
 {
 	this->speed = speed;
 }
 
-void UFO::SetAngle(int fi)
+void UFO::SetAngle(double fi)
 {
 	angle = fi;
 }
 
-int UFO::CaltulateAngle(POINT a)
+double UFO::CaltulateAngle(POINT a)
 {
 	POINT vect;
-	vect.x = position.x - a.x;
-	vect.y = position.y - a.y;
-	return atan(vect.x / vect.x) * 180 / 3.14159265;
+	vect.x = (a.x - position.x);
+	vect.y = (a.y - position.y);
+	double at = atan((double)vect.y / (double)vect.x);
+	double pi = (180.0 / 3.1415926535);
+	double res = at * pi;
+	if (position.x < a.x)
+		res += 180;
+	return  res;
 }
 
 void UFO::Jump()
@@ -47,10 +52,12 @@ void UFO::RotationMotion(bool isJump)
 {
 	double shag = speed;
 	angle += shag;
+	if (angle > 360)
+		angle -= 360;
 	position = GetNewPosition(angle, distance);
 }
 
-POINT UFO::GetNewPosition(double h, int dist)
+POINT UFO::GetNewPosition(double h, double dist)
 {
 	POINT p;
 	p.x = CenterOfRotation.x + int(dist * cos(h*3.14159265 / 180));
