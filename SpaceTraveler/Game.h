@@ -25,8 +25,4 @@ private:
 	void Move();
 	void Jump();
 	void DrawScene(HWND);
-	iterPlanet GetPlanetIfCollision();
-	bool IsCollision(iterPlanet);
-	int GetDistance(POINT a, POINT b);
-	POINT SetNewCenterRotate(iterPlanet);
 };
