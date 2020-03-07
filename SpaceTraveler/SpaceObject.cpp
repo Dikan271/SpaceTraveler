@@ -61,3 +61,9 @@ POINT SpaceObject::GetPosition()
 {
 	return position;
 }
+
+bool SpaceObject::operator==(const SpaceObject & right)
+{
+	return(this->position.x == right.position.x
+		&& this->position.y == right.position.y);
+}

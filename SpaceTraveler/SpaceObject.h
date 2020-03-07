@@ -14,6 +14,7 @@ public:
 	void SetRedius(int);
 	int GetRadius();
 	POINT GetPosition();
+	bool operator== (const SpaceObject &right);
 
 protected:
 	POINT position;
