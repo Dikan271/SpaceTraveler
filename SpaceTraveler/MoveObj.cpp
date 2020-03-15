@@ -35,8 +35,10 @@ int MoveObj::GetDistance(POINT a, POINT b)
 
 POINT MoveObj::SetNewPlanetRotate(UFO *ufo, iterPlanet itPlanet)
 {
+	POINT lastCenter = ufo->GetCenterRotation();
 	POINT newCenter = SetNewCenterRotate(ufo, itPlanet);
-	SetNewAngle(ufo, newCenter);
+	double angle = SetNewAngle(ufo, newCenter);
+	SetRotation(ufo, lastCenter, newCenter, angle);
 	return newCenter;
 }
 
@@ -48,8 +50,29 @@ POINT MoveObj::SetNewCenterRotate(UFO *ufo, iterPlanet itPlanet)
 	return newCenterRotat;
 }
 
-void MoveObj::SetNewAngle(UFO *ufo, POINT point)
+double MoveObj::SetNewAngle(UFO *ufo, POINT point)
 {
-	double newAngle = ufo->CaltulateAngle(point);
+	double newAngle = CaltulateAngle(ufo->GetPosition(), point);
 	ufo->SetAngle(newAngle);
+	return newAngle;
+}
+
+void MoveObj::SetRotation(UFO* ufo, POINT lastP, POINT newP, double newAngle)
+{
+	double anglelastToNew = CaltulateAngle(lastP, newP);
+	bool direction = (newAngle - anglelastToNew > 0);
+	ufo->SetDirectionOfRotation(direction);
+}
+
+double MoveObj::CaltulateAngle(POINT a, POINT b)
+{
+	POINT vect;
+	vect.x = (b.x - a.x);
+	vect.y = (b.y - a.y);
+	double at = atan((double)vect.y / (double)vect.x);
+	double pi = (180.0 / 3.1415926535);
+	double res = at * pi;
+	if (a.x < b.x)
+		res += 180;
+	return  res;
 }

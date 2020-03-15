@@ -28,6 +28,16 @@ void UFO::SetAngle(double fi)
 	angle = fi;
 }
 
+void UFO::SetDirectionOfRotation(bool isRight)
+{
+	direction = isRight;
+}
+
+POINT UFO::GetCenterRotation()
+{
+	return CenterOfRotation;
+}
+
 double UFO::CaltulateAngle(POINT a)
 {
 	POINT vect;
@@ -44,16 +54,25 @@ double UFO::CaltulateAngle(POINT a)
 void UFO::Jump()
 {
 	double shag = speed;
-	distance += shag;
+	distance += shag+5;
 	position = GetNewPosition(angle, distance);
 }
 
-void UFO::RotationMotion(bool isJump)
+void UFO::RotationMotion()
 {
 	double shag = speed;
-	angle += shag;
-	if (angle > 360)
-		angle -= 360;
+	if (direction)
+	{
+		angle += shag;
+		if (angle > 360)
+			angle -= 360;
+	}
+	else
+	{
+		angle -= shag;
+		if (angle < 0)
+			angle += 360;
+	}
 	position = GetNewPosition(angle, distance);
 }
 

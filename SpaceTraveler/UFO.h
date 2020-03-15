@@ -14,12 +14,15 @@ public:
 	void SetDistanse(double);
 	void SetSpeed(double);
 	void SetAngle(double);
+	void SetDirectionOfRotation(bool isRight);
+	POINT GetCenterRotation();
 	double CaltulateAngle(POINT);
-	void RotationMotion	(bool);
+	void RotationMotion();
 	void Jump();
 
 private:
 	POINT CenterOfRotation;
+	bool direction = true;
 	double distance = radiusObject;
 	int angle = 0;
 	double speed = 5;

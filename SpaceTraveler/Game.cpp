@@ -23,9 +23,7 @@ void Game::StartGame(HWND hWnd)
 	player->SetSpeed(10);
 	int dist = it->GetGravity();
 	player->SetDistanse(dist);
-	player->RotationMotion(0);
-	moveMode = rotation;
-
+	gameMode = rotation;
 }
 
 POINT Game::GetStPos(HWND hWnd)
@@ -46,13 +44,18 @@ LRESULT Game::GameProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 0, 100, NULL);
 		break;
 	case WM_LBUTTONDOWN:
-		moveMode = jump;
+		gameMode = jump;
+		break;
+	case WM_RBUTTONUP: //for test
+		DestroyWindow(hWnd);
 		break;
 	case WM_PAINT:
 		DrawScene(hWnd);
 		break;
 	case WM_TIMER:
 		Move();
+		if (PlayerIsDead(hWnd))
+			GameOver(hWnd, wParam, lParam);
 		RECT rect;
 		GetClientRect(hWnd, &rect);
 		InvalidateRect(hWnd, &rect, 1);
@@ -66,9 +69,9 @@ LRESULT Game::GameProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void Game::Move()
 {
-	if (moveMode == jump)
+	if (gameMode == jump)
 		Jump();
-	else player->RotationMotion(0);
+	else player->RotationMotion();
 }
 
 void Game::Jump()
@@ -79,9 +82,18 @@ void Game::Jump()
 		player->Jump();
 	else
 	{
-		moveMode = rotation;
+		gameMode = rotation;
 		MoveObj::SetNewPlanetRotate(player, collisionObj);
 	}
+}
+
+bool Game::PlayerIsDead(HWND hWnd)
+{
+	POINT locationPlayer = player->GetPosition();
+	RECT sizeWin;
+	GetWindowRect(hWnd, &sizeWin);
+	return (locationPlayer.x <= 0 || locationPlayer.x >= sizeWin.right)
+		|| (locationPlayer.y <= 0 || locationPlayer.y >= sizeWin.bottom);
 }
 
 void Game::DrawScene(HWND hWnd)
@@ -94,4 +106,10 @@ void Game::DrawScene(HWND hWnd)
 		it->Show(hdc);
 	}
 	EndPaint(hWnd, &ps);
+}
+
+void Game::GameOver(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+//	MessageBox(hWnd, "Game over\nYou are dead", "Game Over", MB_OK);
+	SendMessage(hWnd, WM_CLOSE, wParam, lParam);
 }

@@ -16,6 +16,8 @@ private:
 	static bool IsCollision(UFO, iterPlanet);
 	static int GetDistance(POINT, POINT);
 	static POINT SetNewCenterRotate(UFO*, iterPlanet);
-	static void SetNewAngle(UFO*, POINT);
+	static double SetNewAngle(UFO*, POINT);
+	static void SetRotation(UFO*, POINT lastP, POINT newP, double angle);
+	static double CaltulateAngle(POINT a, POINT b);
 };
 
