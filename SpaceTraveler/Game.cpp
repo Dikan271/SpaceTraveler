@@ -13,13 +13,13 @@ Game::~Game()
 void Game::StartGame(HWND hWnd)
 {
 	startPos = GetStPos(hWnd);
-	planet.push_back(Planet(startPos, 50, 10));
-	planet.push_back(Planet());
-	iterPlanet it = --planet.end();
+	planets.push_back(Planet(startPos, 50, 10));
+	planets.push_back(Planet());
+	iterPlanet it = --planets.end();
 	it->SetGravity(15);
 	player->SetCenterOfRorarion(startPos);
 	player->SetRedius(12);
-	it = planet.begin();
+	it = planets.begin();
 	player->SetSpeed(10);
 	int dist = it->GetGravity();
 	player->SetDistanse(dist);
@@ -76,14 +76,23 @@ void Game::Move()
 
 void Game::Jump()
 {
-	iterPlanet collisionObj = MoveObj::GetPlanetIfCollision(*player, &planet);
-	iterPlanet begin = planet.begin();
+	iterPlanet collisionObj = MoveObj::GetPlanetIfCollision(*player, &planets);
+	iterPlanet begin = planets.begin();
 	if (*collisionObj == *begin)
 		player->Jump();
 	else
 	{
 		gameMode = rotation;
 		MoveObj::SetNewPlanetRotate(player, collisionObj);
+		DeletePastPlanets(collisionObj);
+	}
+}
+
+void Game::DeletePastPlanets(iterPlanet itPlanet)
+{
+	while (planets.begin() != itPlanet)
+	{
+			planets.pop_front();
 	}
 }
 
@@ -101,7 +110,7 @@ void Game::DrawScene(HWND hWnd)
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(hWnd, &ps);
 	player->Show(hdc);
-	for (auto it = planet.begin(); it != planet.end(); ++it)
+	for (auto it = planets.begin(); it != planets.end(); ++it)
 	{
 		it->Show(hdc);
 	}

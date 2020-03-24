@@ -17,12 +17,15 @@ public:
 	void StartGame(HWND);
 	LRESULT CALLBACK GameProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
-	enum {rotation, jump} moveMode;
+	enum {rotation, jump} gameMode;
 	UFO *player;
-	std::list<Planet> planet;
+	std::list<Planet> planets;
 	POINT startPos;
 	POINT GetStPos(HWND);
 	void Move();
 	void Jump();
+	void DeleteLostPlanets(iterPlanet);
+	bool PlayerIsDead(HWND);
 	void DrawScene(HWND);
+	void GameOver(HWND hWnd, WPARAM wParam, LPARAM lParam);
 };
