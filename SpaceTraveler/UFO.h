@@ -16,7 +16,6 @@ public:
 	void SetAngle(double);
 	void SetDirectionOfRotation(bool isRight);
 	POINT GetCenterRotation();
-	double CaltulateAngle(POINT);
 	void RotationMotion();
 	void Jump();
 

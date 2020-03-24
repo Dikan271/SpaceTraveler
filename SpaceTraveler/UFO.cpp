@@ -38,19 +38,6 @@ POINT UFO::GetCenterRotation()
 	return CenterOfRotation;
 }
 
-double UFO::CaltulateAngle(POINT a)
-{
-	POINT vect;
-	vect.x = (a.x - position.x);
-	vect.y = (a.y - position.y);
-	double at = atan((double)vect.y / (double)vect.x);
-	double pi = (180.0 / 3.1415926535);
-	double res = at * pi;
-	if (position.x < a.x)
-		res += 180;
-	return  res;
-}
-
 void UFO::Jump()
 {
 	double shag = speed;
