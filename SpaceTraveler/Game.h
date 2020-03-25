@@ -1,13 +1,14 @@
 #pragma once
 #include <Windows.h>
 #include <cmath>
-#include <list>
+#include <vector>
 #include "SpaceObject.h"
 #include "UFO.h"
 #include "Planet.h"
-#include "MoveObj.h"
+#include "JumpUtility.h"
+#include "Carrier.h"
 
-typedef std::list<Planet>::iterator iterPlanet;
+typedef std::vector<Planet>::iterator iterPlanet;
 
 class Game
 {
@@ -17,14 +18,16 @@ public:
 	void StartGame(HWND);
 	LRESULT CALLBACK GameProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
-	enum {rotation, jump} gameMode;
+	enum {rotation, jump, update} gameMode;
 	UFO *player;
-	std::list<Planet> planets;
+	std::vector<Planet> planets;
 	POINT startPos;
-	POINT GetStPos(HWND);
+	POINT GetStartPos(HWND);
 	void Move();
 	void Jump();
-	void DeleteLostPlanets(iterPlanet);
+	void UpdateLevel();
+	void DeletePastPlanets(iterPlanet);
+	void MovingPlanet();
 	bool PlayerIsDead(HWND);
 	void DrawScene(HWND);
 	void GameOver(HWND hWnd, WPARAM wParam, LPARAM lParam);

@@ -12,7 +12,7 @@ Game::~Game()
 
 void Game::StartGame(HWND hWnd)
 {
-	startPos = GetStPos(hWnd);
+	startPos = GetStartPos(hWnd);
 	planets.push_back(Planet(startPos, 50, 10));
 	planets.push_back(Planet());
 	iterPlanet it = --planets.end();
@@ -26,7 +26,7 @@ void Game::StartGame(HWND hWnd)
 	gameMode = rotation;
 }
 
-POINT Game::GetStPos(HWND hWnd)
+POINT Game::GetStartPos(HWND hWnd)
 {
 	RECT rt;
 	GetClientRect(hWnd, &rt);
@@ -44,7 +44,8 @@ LRESULT Game::GameProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 0, 100, NULL);
 		break;
 	case WM_LBUTTONDOWN:
-		gameMode = jump;
+		if(gameMode != update) 
+			gameMode = jump;
 		break;
 	case WM_RBUTTONUP: //for test
 		DestroyWindow(hWnd);
@@ -71,29 +72,50 @@ void Game::Move()
 {
 	if (gameMode == jump)
 		Jump();
+	else if (gameMode == update)
+		UpdateLevel();
 	else player->RotationMotion();
 }
 
 void Game::Jump()
 {
-	iterPlanet collisionObj = MoveObj::GetPlanetIfCollision(*player, &planets);
+	iterPlanet collisionObj = JumpUtility::GetPlanetIfCollision(*player, &planets);
 	iterPlanet begin = planets.begin();
 	if (*collisionObj == *begin)
 		player->Jump();
 	else
 	{
-		gameMode = rotation;
-		MoveObj::SetNewPlanetRotate(player, collisionObj);
+		gameMode = update;
+		
+		JumpUtility::SetNewPlanetRotate(player, collisionObj);
 		DeletePastPlanets(collisionObj);
 	}
 }
 
+void Game::UpdateLevel()
+{
+	MovingPlanet();
+}
+
 void Game::DeletePastPlanets(iterPlanet itPlanet)
 {
-	while (planets.begin() != itPlanet)
+	Planet plan = *itPlanet;
+	while (!(*planets.begin() == plan))
 	{
-			planets.pop_front();
+		planets.erase(planets.begin());
 	}
+}
+
+void Game::MovingPlanet()
+{
+	Carrier carrier(planets.begin(), startPos);
+	carrier.Move();
+	
+	player->SetCenterOfRorarion(planets.begin()->GetPosition());
+	player->RotationMotion();
+	bool isFinishedMove = carrier.IsEmptyPath();
+	if(isFinishedMove)
+		gameMode = rotation;
 }
 
 bool Game::PlayerIsDead(HWND hWnd)
