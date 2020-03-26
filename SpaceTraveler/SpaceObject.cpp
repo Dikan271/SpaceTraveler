@@ -17,6 +17,11 @@ SpaceObject::SpaceObject(int radius) :SpaceObject()
 	radiusObject = radius;
 }
 
+SpaceObject::SpaceObject(POINT position)
+{
+	this->position = position;
+}
+
 void SpaceObject::Show(HDC hdc)
 {
 	HBRUSH MyPen, OldPen;

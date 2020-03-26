@@ -7,6 +7,7 @@ public:
 	SpaceObject();
 	SpaceObject(int, COLORREF);
 	SpaceObject(int);
+	SpaceObject(POINT);
 	void Show(HDC);
 	void Hide(HDC);
 	void SetColor(COLORREF);
