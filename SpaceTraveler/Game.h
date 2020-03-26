@@ -26,7 +26,8 @@ private:
 	void Move();
 	void Jump();
 	void UpdateLevel();
-	void DeletePastPlanets(iterPlanet);
+	void RorationPlayer(bool ifNeedResetPosition);
+	void DeletePastPlanets();
 	void MovingPlanet();
 	bool PlayerIsDead(HWND);
 	void DrawScene(HWND);

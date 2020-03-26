@@ -74,7 +74,8 @@ void Game::Move()
 		Jump();
 	else if (gameMode == update)
 		UpdateLevel();
-	else player->RotationMotion();
+	else
+		RorationPlayer(false);
 }
 
 void Game::Jump()
@@ -86,20 +87,26 @@ void Game::Jump()
 	else
 	{
 		gameMode = update;
-		
 		JumpUtility::SetNewPlanetRotate(player, collisionObj);
-		DeletePastPlanets(collisionObj);
 	}
 }
 
 void Game::UpdateLevel()
 {
+	DeletePastPlanets();
 	MovingPlanet();
 }
 
-void Game::DeletePastPlanets(iterPlanet itPlanet)
+void Game::RorationPlayer(bool ifNeedResetPosition)
 {
-	Planet plan = *itPlanet;
+	if(ifNeedResetPosition)
+		player->SetCenterOfRorarion(planets.begin()->GetPosition());
+	player->RotationMotion();
+}
+
+void Game::DeletePastPlanets()
+{
+	SpaceObject plan(player->GetCenterRotation());
 	while (!(*planets.begin() == plan))
 	{
 		planets.erase(planets.begin());
@@ -110,9 +117,7 @@ void Game::MovingPlanet()
 {
 	Carrier carrier(planets.begin(), startPos);
 	carrier.Move();
-	
-	player->SetCenterOfRorarion(planets.begin()->GetPosition());
-	player->RotationMotion();
+	RorationPlayer(true);
 	bool isFinishedMove = carrier.IsEmptyPath();
 	if(isFinishedMove)
 		gameMode = rotation;
