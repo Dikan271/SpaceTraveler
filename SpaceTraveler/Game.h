@@ -7,6 +7,7 @@
 #include "Planet.h"
 #include "JumpUtility.h"
 #include "Carrier.h"
+#include "GeneratorObject.h"
 
 typedef std::vector<Planet>::iterator iterPlanet;
 
@@ -29,7 +30,9 @@ private:
 	void RorationPlayer(bool ifNeedResetPosition);
 	void DeletePastPlanets();
 	void MovingPlanet();
+	void AddPlanet(int count);
 	bool PlayerIsDead(HWND);
 	void DrawScene(HWND);
 	void GameOver(HWND hWnd, WPARAM wParam, LPARAM lParam);
+	void ReStart(HWND);
 };

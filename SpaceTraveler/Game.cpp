@@ -13,18 +13,26 @@ Game::~Game()
 void Game::StartGame(HWND hWnd)
 {
 	startPos = GetStartPos(hWnd);
-	planets.push_back(Planet(startPos, 50, 10));
-	planets.push_back(Planet());
-	iterPlanet it = --planets.end();
-	it->SetGravity(15);
+	planets.push_back(Planet(startPos, 60, 10));
+	AddPlanet(1);
+
 	player->SetCenterOfRorarion(startPos);
 	player->SetRedius(12);
-	it = planets.begin();
 	player->SetSpeed(10);
-	int dist = it->GetGravity();
+
+	int dist = planets[0].GetGravity();
 	player->SetDistanse(dist);
+
 	gameMode = rotation;
 }
+
+
+void Game::ReStart(HWND hWnd)
+{
+	planets.clear();
+	StartGame(hWnd);
+}
+
 
 POINT Game::GetStartPos(HWND hWnd)
 {
@@ -48,7 +56,8 @@ LRESULT Game::GameProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			gameMode = jump;
 		break;
 	case WM_RBUTTONUP: //for test
-		DestroyWindow(hWnd);
+		ReStart(hWnd);
+					   //DestroyWindow(hWnd);
 		break;
 	case WM_PAINT:
 		DrawScene(hWnd);
@@ -95,6 +104,8 @@ void Game::UpdateLevel()
 {
 	DeletePastPlanets();
 	MovingPlanet();
+	if(gameMode == rotation)
+		AddPlanet(1);
 }
 
 void Game::RorationPlayer(bool ifNeedResetPosition)
@@ -123,6 +134,15 @@ void Game::MovingPlanet()
 		gameMode = rotation;
 }
 
+void Game::AddPlanet(int count)
+{
+	GeneratorObject generator;
+	for (int i = 0; i < count; i++)
+	{
+		planets.push_back(generator.GetPlanet());
+	}
+}
+
 bool Game::PlayerIsDead(HWND hWnd)
 {
 	POINT locationPlayer = player->GetPosition();
@@ -136,6 +156,7 @@ void Game::DrawScene(HWND hWnd)
 {
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(hWnd, &ps);
+
 	player->Show(hdc);
 	for (auto it = planets.begin(); it != planets.end(); ++it)
 	{
