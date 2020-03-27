@@ -26,7 +26,7 @@ GeneratorObject::~GeneratorObject()
 Planet GeneratorObject::GetPlanet()
 {
 	Planet planet;
-	SetPosition(&planet);
+	//SetPosition(&planet);
 	SetRadius(&planet);
 	SetGravity(&planet);
 	return planet;
