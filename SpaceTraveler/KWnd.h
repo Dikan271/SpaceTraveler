@@ -8,9 +8,9 @@ public:
 		LRESULT (WINAPI *pWndProc)(HWND,UINT,WPARAM,LPARAM),
 		LPCTSTR menuName = NULL,
 		int x = 250, int y = 0,
-		int width = 700, int height = 800,
+		int width = 600, int height = 800,
 		UINT classStyle =  CS_HREDRAW | CS_VREDRAW,
-		DWORD windowStyle = WS_OVERLAPPEDWINDOW,
+		DWORD windowStyle = WS_CAPTION | WS_SYSMENU,
 		HWND hParent = NULL);
 
 	HWND GetHWnd() { return hWnd; }
