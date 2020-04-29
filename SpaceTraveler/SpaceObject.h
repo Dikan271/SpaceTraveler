@@ -8,6 +8,7 @@ public:
 	SpaceObject(int, COLORREF);
 	SpaceObject(int);
 	SpaceObject(POINT);
+	SpaceObject(POINT, int, COLORREF);
 	void Show(HDC);
 	void Hide(HDC);
 	void SetColor(COLORREF);
@@ -16,8 +17,9 @@ public:
 	int GetRadius();
 	POINT GetPosition();
 	bool operator== (const SpaceObject &right);
-
+	void Reset();
 protected:
+	POINT firstPosition;
 	POINT position;
 	COLORREF color;
 	int radiusObject;

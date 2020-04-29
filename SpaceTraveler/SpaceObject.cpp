@@ -20,6 +20,13 @@ SpaceObject::SpaceObject(int radius) :SpaceObject()
 SpaceObject::SpaceObject(POINT position)
 {
 	this->position = position;
+	firstPosition = position;
+}
+
+SpaceObject::SpaceObject(POINT position, int radius, COLORREF col) : SpaceObject(radius, col)
+{
+	this->position = position;
+	firstPosition = position;
 }
 
 void SpaceObject::Show(HDC hdc)
@@ -71,4 +78,9 @@ bool SpaceObject::operator==(const SpaceObject & right)
 {
 	return(this->position.x == right.position.x
 		&& this->position.y == right.position.y);
+}
+
+void SpaceObject::Reset()
+{
+	position = firstPosition;
 }
